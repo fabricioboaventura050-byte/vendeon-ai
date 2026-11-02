@@ -13,22 +13,7 @@ const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 let supabase: SupabaseClient | null = null;
 if (url && anon) supabase = createClient(url, anon);
 
-const initialConversations: Conversation[] = [
-  { id: 1, name: "Mariana Costa", phone: "(13) 99999-1234", preview: "Vocês entregam na minha região?", time: "10:42", unread: 2, messages: [
-    { id: 1, from: "client", text: "Olá! Tudo bem? Gostaria de saber mais sobre os produtos.", time: "10:39" },
-    { id: 2, from: "agent", text: "Olá, Mariana! 😊 Tudo ótimo. Seja bem-vinda! Como posso ajudar?", time: "10:40" },
-    { id: 3, from: "client", text: "Vocês entregam na minha região?", time: "10:42" }
-  ]},
-  { id: 2, name: "Rafael Mendes", phone: "(11) 98888-4321", preview: "Obrigado pelo atendimento!", time: "Ontem", unread: 0, messages: [
-    { id: 4, from: "client", text: "Qual é o prazo de entrega?", time: "Ontem" },
-    { id: 5, from: "agent", text: "O prazo depende do seu CEP. Se me informar, verifico para você.", time: "Ontem" },
-    { id: 6, from: "client", text: "Obrigado pelo atendimento!", time: "Ontem" }
-  ]},
-  { id: 3, name: "Camila Oliveira", phone: "(21) 97777-5678", preview: "Pode me enviar o catálogo?", time: "Seg", unread: 0, messages: [
-    { id: 7, from: "client", text: "Oi! Pode me enviar o catálogo?", time: "Seg" }
-  ]}
-];
-
+const initialConversations: Conversation[] = [];
 const navItems = [
   { id: "inbox", label: "Caixa de entrada", icon: "▤" },
   { id: "automation", label: "Automações", icon: "✧" },
