@@ -41,7 +41,11 @@ export async function POST(request: NextRequest) {
 
   const body = await request.text();
   const signature = request.headers.get("x-hub-signature-256");
-
+console.log("Diagnóstico WhatsApp:", {
+  assinaturaPresente: Boolean(signature),
+  formatoSha256: signature?.startsWith("sha256=") ?? false,
+  appSecretConfigurado: Boolean(appSecret),
+});
   if (!signature?.startsWith("sha256=")) {
     return new NextResponse("Assinatura ausente", {
       status: 401,
