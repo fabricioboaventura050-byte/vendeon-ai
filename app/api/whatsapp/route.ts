@@ -65,7 +65,9 @@ console.log("Diagnóstico WhatsApp:", {
     .digest();
 
   const received = Buffer.from(receivedHex, "hex");
-
+console.log("Diagnóstico da assinatura:", {
+  assinaturaValida: timingSafeEqual(expected, received),
+});
   if (!timingSafeEqual(expected, received)) {
     return new NextResponse("Assinatura inválida", {
       status: 401,
