@@ -35,6 +35,7 @@ export default function Home() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [conversations, setConversations] = useState(initialConversations);
+  const [loadingMessages, setLoadingMessages] = useState(false);
   const [activeChat, setActiveChat] = useState(1);
   const [draft, setDraft] = useState("");
   const [search, setSearch] = useState("");
@@ -62,6 +63,38 @@ export default function Home() {
     if (!l.error) setLeads((l.data || []) as Lead[]);
     if (!p.error) setProducts((p.data || []) as Product[]);
   }
+
+  async function loadMessages() {
+  if (!supabase) return;
+
+  setLoadingMessages(true);
+
+  try {
+    const { data: { session } } =
+      await supabase.auth.getSession();
+
+    if (!session) return;
+
+    const response = await fetch("/api/messages", {
+      headers: {
+        Authorization: `Bearer ${session.access_token}`,
+      },
+    });
+
+    if (!response.ok) {
+      console.error("Erro ao buscar mensagens");
+      return;
+    }
+
+    const { messages } = await response.json();
+    console.log("Mensagens recebidas:", messages);
+  } catch (error) {
+    console.error("Erro:", error);
+  } finally {
+    setLoadingMessages(false);
+  }
+  }
+  
 
   useEffect(() => { if (user) loadData(); }, [user]);
 
