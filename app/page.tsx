@@ -96,8 +96,12 @@ export default function Home() {
   }
   
 
-  useEffect(() => { if (user) loadData(); }, [user]);
-
+  useEffect(() => {
+  if (user) {
+    loadData();
+    loadMessages();
+  }
+}, [user]);
   async function authenticate(e: React.FormEvent) {
     e.preventDefault();
     if (!supabase) return;
