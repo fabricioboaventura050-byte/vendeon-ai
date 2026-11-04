@@ -88,6 +88,7 @@ export default function Home() {
 
     const { messages } = await response.json();
     console.log("Mensagens recebidas:", messages);
+    console.log("Quantidade de mensagens:", messages.length);
   } catch (error) {
     console.error("Erro:", error);
   } finally {
