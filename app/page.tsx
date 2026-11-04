@@ -87,8 +87,46 @@ export default function Home() {
     }
 
     const { messages } = await response.json();
-    console.log("Mensagens recebidas:", messages);
-    console.log("Quantidade de mensagens:", messages.length);
+    const chats: Conversation[] = Object.values(
+  (messages as any[]).reduce((grupos: Record<string, any>, msg: any) => {
+    const phone = msg.phone_number || "Desconhecido";
+
+    if (!grupos[phone]) {
+      grupos[phone] = {
+        id: Object.keys(grupos).length + 1,
+        name: msg.contact_name || phone,
+        phone,
+        preview: "",
+        time: "",
+        unread: 0,
+        messages: [],
+      };
+    }
+
+    grupos[phone].messages.unshift({
+      id: grupos[phone].messages.length + 1,
+      from: msg.direction === "outgoing" ? "agent" : "client",
+      text: msg.message_text || "",
+      time: new Date(msg.created_at).toLocaleTimeString("pt-BR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    });
+
+    if (!grupos[phone].preview) {
+      grupos[phone].preview = msg.message_text || "";
+      grupos[phone].time = new Date(msg.created_at).toLocaleTimeString("pt-BR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+
+    return grupos;
+  }, {})
+) as Conversation[];
+
+setConversations(chats);
+if (chats.length > 0) setActiveChat(chats[0].id);
   } catch (error) {
     console.error("Erro:", error);
   } finally {
