@@ -164,9 +164,37 @@ if (chats.length > 0) setActiveChat(chats[0].id);
     `${c.name} ${c.phone} ${c.preview}`.toLowerCase().includes(search.toLowerCase())
   ), [conversations, search]);
 
-  function sendMessage(e: React.FormEvent) {
+  async function sendMessage(e: React.FormEvent) {
     e.preventDefault();
     if (!draft.trim() || !activeConversation) return;
+    const phone = activeConversation.phone.replace(/\D/g, "");
+    const text = draft.trim();
+    if (!supabase) return;
+
+const { data: { session } } = await supabase.auth.getSession();
+
+if (!session) {
+  alert("Faça login novamente para enviar mensagens.");
+  return;
+}
+   try {
+  const response = await fetch("/api/send-message", {
+    method: "POST",
+    headers: {
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${session.access_token}`,
+},
+    body: JSON.stringify({ to: phone, text }),
+  });
+
+  if (!response.ok) {
+    alert("Não foi possível enviar a mensagem pelo WhatsApp.");
+    return;
+  }
+} catch (error) {
+  alert("Erro de conexão ao enviar a mensagem.");
+  return;
+   }
     const now = new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
     setConversations(current => current.map(c => c.id === activeChat ? {
       ...c, preview: draft, time: now,
